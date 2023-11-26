@@ -1,23 +1,11 @@
-use actix_web::{web, App, HttpRequest, HttpServer, Responder, HttpResponse};
+#[cfg(test)]
+mod tests;
 
-async fn greet(req: HttpRequest) -> impl Responder {
-    let name = req.match_info().get("name").unwrap_or("World");
-    format!("Hello {}!", &name)
-}
-
-async fn health_check(_req: HttpRequest) -> impl Responder {
-    HttpResponse::Ok()
-}
+use newsletter::run;
 
 #[tokio::main]
 async fn main() -> std::io::Result<()>{
-    HttpServer::new(|| {
-        App::new()
-        .route("/", web::get().to(greet))
-        .route("/{name}", web::get().to(greet))
-        .route("/health_check", web::get().to(health_check))
-    })
-    .bind("localhost:8000")?
-    .run()
-    .await
+    let address = "localhost:3000";
+    run(address)?.await
 }
+
